@@ -1,8 +1,8 @@
 # PC Settling Is Fragile to Internal Noise
 
-Predictive coding (PC) networks are often claimed to be robust to noise. This experiment tests whether that robustness extends to **biologically realistic noise injected at every layer during every settling step** -- as opposed to the input-only noise tested in the literature.
+This experiment tests whether that robustness extends to biologically realistic noise injected at every layer during every settling step.
 
-**Finding: it does not.** Even sigma=0.001 additive Gaussian noise at each value node during settling destroys learning at depth 10 and degrades it at depth 3. This is not graceful degradation -- it is a cliff.
+Even sigma=0.001 additive Gaussian noise at each value node during settling destroys learning at depth 10 and degrades it at depth 3.
 
 ## Experiment Design
 
@@ -52,14 +52,12 @@ Predictive coding (PC) networks are often claimed to be robust to noise. This ex
 
 4. **PC requires O(depth) settling steps.** 10 settling steps cannot propagate the error signal through 10 layers (each step moves information one layer). This is itself a biological constraint -- 20 recurrent sweeps per inference is already beyond typical estimates for cortical autorecurrence within a gamma cycle.
 
-## Implications
-
-The "noise robustness" claimed in PC literature (e.g. robustness to corrupted inputs) does not extend to the internal noise that biological neurons experience during the settling process itself. Synaptic noise (~1mV std on ~10mV PSPs) corresponds to sigma ~0.1 in normalized units -- orders of magnitude above the sigma=0.001 that already destroys learning here.
 
 This suggests that biological predictive coding, if it exists, either:
 - Operates at very shallow depth (2-3 layers), or
 - Uses mechanisms not captured by standard PC settling (e.g., dendritic compartments, oscillatory gating, precision weighting), or
 - Does not rely on iterative settling at all
+Given most mammals have 6 cortical layers, each of which have autorecurrence and are more computationally complex than individual neurons, I expect a combination of the latter two points.
 
 ## Reproduction
 
@@ -74,7 +72,7 @@ python pc_noise_mnist.py --phase run_all --depth 10 --hidden-dim 48 --settling-s
 python pc_noise_mnist.py --phase run_all --depth 3 --hidden-dim 48 --settling-steps 10
 ```
 
-Requires PyTorch and torchvision. MNIST is downloaded automatically. CPU-only, runs in ~30 minutes per depth on 10 cores.
+Requires PyTorch and torchvision. MNIST is downloaded automatically. CPU-only, runs in ~30 minutes per depth on Intel Ultra 5 225H @ 10 active cores.
 
 ## Files
 
